@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import './Genre.css';
+import { useNavigate } from 'react-router-dom';
 
 
 function Genre() {
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [submitMessage, setSubmitMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   const categories = [
-    { id: 1, name: 'Music', image: "movie-genre/rrr.jpg" },
-    { id: 2, name: 'Music', image: 'movie-genre/rrr.jpg' },
-    { id: 3, name: 'Music', image: 'movie-genre/rrr.jpg' },
-    { id: 4, name: 'Music', image: 'movie-genre/rrr.jpg' },
-    { id: 5, name: 'Music', image: 'movie-genre/rrr.jpg' },
-    { id: 6, name: 'Music', image: 'movie-genre/rrr.jpg' },
-    { id: 7, name: 'Music', image: 'movie-genre/rrr.jpg' },
-    { id: 8, name: 'Music', image: 'movie-genre/rrr.jpg' },
-    { id: 9, name: 'Music', image: 'movie-genre/rrr.jpg' }
+    { id: 1, name: 'Music', image: "movie-genre/rrr.jpg", color:'red' },
+    { id: 2, name: 'Music', image: 'movie-genre/rrr.jpg', color:'red' },
+    { id: 3, name: 'Music', image: 'movie-genre/rrr.jpg', color:'red' },
+    { id: 4, name: 'Music', image: 'movie-genre/rrr.jpg', color:'red' },
+    { id: 5, name: 'Music', image: 'movie-genre/rrr.jpg', color:'red' },
+    { id: 6, name: 'Music', image: 'movie-genre/rrr.jpg', color:'red' },
+    { id: 7, name: 'Music', image: 'movie-genre/rrr.jpg', color:'red' },
+    { id: 8, name: 'Music', image: 'movie-genre/rrr.jpg', color:'red' },
+    { id: 9, name: 'Music', image: 'movie-genre/rrr.jpg', color:'red' }
     // Add more categories as needed
   ];
 
@@ -44,12 +45,11 @@ function Genre() {
 
   const handleSubmit = () => {
     if (selectedCategories.length < 3) {
-      setErrorMessage('Please select at least 3 categories');
-      setSubmitMessage('');
-    } else {
-      setErrorMessage('');
-      setSubmitMessage('Form submitted successfully!');
+      setErrorMessage(' Minimum 3 category required');
+      return
     }
+    localStorage.setItem('userChoices', selectedCategories)
+    navigate('/profile');
   };
 
   return (
@@ -57,34 +57,30 @@ function Genre() {
       <div id='left-section'>
         <h1>Super App</h1>
         <h2>Choose your entertainment category</h2>
-        <div className='category-list'>
+        <div id='selected-list'>
           {selectedCategories.map((categoryId) => (
-            <div className='category-item' key={categoryId}>
+            <div className='selected-item' key={categoryId}>
               <span>{categories.find((c) => c.id === categoryId).name}</span>
-              <button onClick={() => handleCancelClick(categoryId)}>
-                Cancel
+              <button id='cancel-button' onClick={() => handleCancelClick(categoryId)}>
+                X
               </button>
             </div>
           ))}
         </div>
         {errorMessage && <p id='error-message'>{errorMessage}</p>}
-        <button id='submit-button' onClick={handleSubmit}>Submit</button>
-        {submitMessage && <p>{submitMessage}</p>}
+        
       </div>
       <div id='right-section'>
         <div className='category-list'>
           {categories.map((category) => (
-            <div className='category-item' key={category.id}>
+            <div className='category-item' onClick={() => handleCategoryClick(category.id)}
+            style={{ cursor: 'pointer' }} key={category.id}>
+              {category.name}
               <img src={category.image} alt={category.name} />
-              <span
-                onClick={() => handleCategoryClick(category.id)}
-                style={{ cursor: 'pointer' }}
-              >
-                {category.name}
-              </span>
             </div>
           ))}
         </div>
+        <button id='submit-button' onClick={handleSubmit}>Next Page</button>
       </div>
     </div>
   )
